@@ -1,18 +1,38 @@
+import User from "../Modules/User";
+
 export class UserControllers {
 
     constructor(){}
 
     static login(req:any,res:any, next){
-        // const data = {
-        //     api_message:'User login in successfully',
-        //     message:'User login in successfully'
-        // };
-        // res.json({ data });
-        
-        req.errorStatus = 422
-        let error = new Error('User Email or Password not matched');
-        next(error,req);
-        // res.send(req.query);
+        const userName = req.body.userName;
+        const email    = req.body.email;
+        const password = req.body.password;
+        console.log(req.body)
+        if(userName && email && password){
+            const user = new User({
+                userName,
+                email,
+                password,
+            });
+           
+            user.save().then(user => {
+                console.log(user);
+                res.send(user);
+            })
+            .catch(e => {
+                const error = new Error(e)
+                next(error);
+            });
+        }else{
+            req.errorStatus = 400;
+            const error = new Error(`The request was invalid cannot be served or payload error`);
+            next(error);
+        }
+
+
+
+
     };
 
 

@@ -1,5 +1,6 @@
 import * as express from 'express';
 import * as mongoose from 'mongoose';
+import * as bodyparse from 'body-parser';
 import { getEnviromentVariables } from '../enviroments/enviroment';
 import UserRoutes from './routes/UserRoutes';
 
@@ -15,10 +16,17 @@ export class Server {
 
     setConfig(){
         this.connectMongoDB();
+        this.configureBodyParser();
     };
   
     connectMongoDB(){
         mongoose.connect(getEnviromentVariables().db_url).then(() => console.log('Mongodb DB connected'));
+    }
+
+    configureBodyParser(){
+        this.app.use(bodyparse.urlencoded({
+            extended:true,
+        }));
     }
 
     setRoutes(){
