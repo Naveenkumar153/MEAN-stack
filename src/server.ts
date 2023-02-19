@@ -9,6 +9,8 @@ export class Server {
     ){
         this.setConfig();
         this.setRoutes();
+        this.error404Handler();
+        this.handleErrors();
     }
 
     setConfig(){
@@ -22,4 +24,28 @@ export class Server {
     setRoutes(){
         this.app.use('/api/user', UserRoutes);
     };
+
+    error404Handler(){
+        this.app.use((req,res) => {
+            res.status(404).json({
+                data: {
+                    message:'Not Found',
+                    status_code:404,
+                }
+            });
+        })
+    };
+
+    handleErrors(){
+        this.app.use((error,req,res,next) => {
+            const errorStatus = req.errorStatus ||  500;
+            console.log(errorStatus);
+            res.status(errorStatus).json({
+                data: {
+                    message: error.message || 'Something went wrong. Please try again !',
+                    status_code:errorStatus
+                }
+            });
+        });
+    }
 }
