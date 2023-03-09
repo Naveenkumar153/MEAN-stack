@@ -1,6 +1,7 @@
 import * as express from 'express';
 import * as mongoose from 'mongoose';
 import * as bodyparse from 'body-parser';
+import * as cors from 'cors';
 import { getEnviromentVariables } from '../enviroments/enviroment';
 import UserRoutes from './routes/UserRoutes';
 
@@ -16,6 +17,7 @@ export class Server {
 
     setConfig(){
         this.connectMongoDB();
+        this.allowCors();
         this.configureBodyParser();
     };
   
@@ -23,10 +25,15 @@ export class Server {
         mongoose.connect(getEnviromentVariables().db_url).then(() => console.log('Mongodb DB connected'));
     }
 
+    allowCors(){
+        this.app.use(cors())
+    }
+
     configureBodyParser(){
         this.app.use(bodyparse.urlencoded({
             extended:true,
         }));
+        // this.app.use(bodyparse.json());
     }
 
     setRoutes(){

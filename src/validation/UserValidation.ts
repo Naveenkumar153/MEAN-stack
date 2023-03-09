@@ -8,6 +8,7 @@ export class userValidation {
     static signUpValidation() {
         return [
             body('userName')
+            .isString()
             .exists()
             .withMessage('name is required')
             .isLength({min:3, max:20})
@@ -22,6 +23,7 @@ export class userValidation {
             .withMessage('Email is not valid'),
             body('password')
             .exists()
+            .isAlphanumeric() 
             .withMessage('password is required') 
             .isLength({min:8, max:20})
             .withMessage('password must between 8 and 20 characters')

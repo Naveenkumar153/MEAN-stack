@@ -14,8 +14,6 @@ export class UserRouter {
     }
 
     getRoutes(){
-        //  this.router.get('/login',UserControllers.login);
-         this.router.get('/test', UserControllers.test1, UserControllers.test2);
     };
     postRoutes(){
         this.router.post('/signup', userValidation.signUpValidation() , UserControllers.signup);
