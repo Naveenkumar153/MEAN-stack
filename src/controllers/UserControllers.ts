@@ -1,64 +1,73 @@
-import * as express from 'express';
-import { validationResult } from "express-validator";
-import User from "../Modules/User";
-export class UserControllers {
+import { validationResult } from 'express-validator';
+import * as Bcrypt from 'bcrypt';
+import { NodeMailer } from './../utils/NodeMailer';
+import { Utils } from './../utils/Utils';
+import User from '../Modules/User';
 
-    constructor(){}
+export class UserController {
 
-    static signup(req:any,res:any, next:express.NextFunction){
+    private static encrptPassword(req,res,next){
+        return new Promise((resolve, reject) => {
+            Bcrypt.hash(req.body.password,10,(err,hash) => {
+                if(err) reject(err);
+                resolve(hash);
+            });
+        });
+    }
 
+    static async signup(req, res, next) {
         const errors = validationResult(req);
-        console.log(req.body)
-        const userName = req.body.username;
-        const email    = req.body.email;
-        const password = req.body.password;
+        const name = req.body.name;
+        const email = req.body.email;
+        // const password = req.body.password;
+  
 
         if(!errors.isEmpty()){
-            next(new Error(errors.array()[0].msg))
-            // return res.status(400).json({ errors:errors.array().map(val =>  { return { value:val.value, msg:val.msg} }) })
-        }
-
-        // let data = {
-        //     success:'success',
-        //     status:200
-        // } 
-        // res.json({
-        //     data
-        // })
-        console.log(req.body)
-        if(userName && email && password){
-            const user = new User({
-                userName,
-                email,
-                password,
-            });
-           
-            user.save().then(user => {
-                console.log(user);
-                res.send(user);
-            })
-            .catch(e => {
-                const error = new Error(e)
-                next(error);
-            });
+            next(new Error(errors.array()[0].msg));
         }else{
-            req.errorStatus = 400;
-            const error = new Error(`The request was invalid cannot be served or payload error`);
-            next(error);
+            
+            try {
+                const hashPassword = await UserController.encrptPassword(req,res,next);
+                const data = {
+                    email,
+                    password:hashPassword,
+                    name,
+                };
+                let user = await new User(data).save();
+                console.log('usercontrollers  user',user)
+                res.send(user);
+            } catch(error) {
+                console.log('error usercontrollers', error)
+                next(error);
+            }
         }
-        
+    }
 
-
-    };
-
-    // static errorHandler(message:string,code?:number){
-    //     console.log(message)
-    //     let data = {
-    //         message: message,
-    //         statusCode:code
-    //     };
-    //     return data
+    // static async verify(req, res, next) {
+    //     const verification_token = req.body.verification_token;
+    //     const email = req.body.email;
+    //     try {
+    //         const user = await User.findOneAndUpdate(
+    //             {
+    //                 email: email,
+    //                 verification_token: verification_token,
+    //                 verification_token_time: {$gt: Date.now()}
+    //             },
+    //             {
+    //                 email_verified: true
+    //             },
+    //             {
+    //                 new: true
+    //             }
+    //         );
+    //         if(user) {
+    //             res.send(user);
+    //         } else {
+    //             throw new Error('Email Verification Token Is Expired. Please try again...');
+    //         }
+    //     } catch(e) {
+    //         next(e);
+    //     }
     // }
-
 
 }
