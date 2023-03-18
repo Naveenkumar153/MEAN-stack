@@ -3,7 +3,7 @@ import * as mongoose from 'mongoose';
 import * as bodyparse from 'body-parser';
 import * as cors from 'cors';
 import { getEnviromentVariables } from '../enviroments/enviroment';
-import UserRoutes from './routes/UserRoutes';
+import UserRoutes from './Routes/UserRoutes';
 
 export class Server {
     public app: express.Application = express();
@@ -20,8 +20,11 @@ export class Server {
         this.configureBodyParser();
     };
   
-    connectMongoDB(){
-        mongoose.connect(getEnviromentVariables().db_url).then(() => console.log('Mongodb DB connected'));
+    async connectMongoDB(){
+        mongoose.set("strictQuery", true);
+        await mongoose.connect(
+            getEnviromentVariables().db_url
+        ).then(() => console.log('Mongodb DB connected')).catch(e => console.log(e));
     }
 
     allowCors(){

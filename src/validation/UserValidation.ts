@@ -1,5 +1,5 @@
 import * as express from 'express';
-import { body } from "express-validator";
+import { body, query } from "express-validator";
 import User from "../Modules/User";
 
 export class userValidation {
@@ -43,5 +43,11 @@ export class userValidation {
             body('verification_token', 'Email verification token is required').isNumeric(),
             body('email', 'Email is required').isEmail(),
         ]
+    }
+
+    static verifiUserResendEmail(){
+        return [
+            body('email',' Email is required ').isEmail()
+        ];
     }
 }

@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { UserController } from "../controllers/UserControllers";
-import { GlobalMiddleWare } from "../middleware/Globalmiddleware";
-import { userValidation } from "../validation/UserValidation";
+import { UserController } from "../Controllers/UserControllers";
+import { GlobalMiddleWare } from "../Middleware/Globalmiddleware";
+import { userValidation } from "../Validation/UserValidation";
 
 export class UserRouter {
     public router: Router;
@@ -15,6 +15,7 @@ export class UserRouter {
     }
 
     getRoutes(){
+        this.router.get('/send/verification-email', userValidation.verifiUserResendEmail(), UserController.resendVerificationEmail);
     };
     postRoutes(){
         // this.router.post('/signup', userValidation.signUpValidation(), GlobalMiddleWare.checkError, UserController.signup);
@@ -23,6 +24,7 @@ export class UserRouter {
     putRoutes(){};
     patchRoutes(){
         // this.router.patch('/verify', userValidation.verifyUserEmail(), GlobalMiddleWare.checkError, UserController.verify);
+        this.router.patch('/verify', userValidation.verifyUserEmail(), UserController.verify);
     };
     deleteRoutes(){};
     
