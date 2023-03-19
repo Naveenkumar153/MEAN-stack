@@ -9,8 +9,8 @@ export class NodeMailer {
         return nodeMailer.createTransport({
             service:'gmail' || getEnviromentVariables().jwt_api_key,
             auth:{
-                user:'mytodo032023@gmail.com',
-                pass:process.env.PASS_KEY || 'jkbqafvtmwfmhejt'
+                user:process.env.USER_NAME || getEnviromentVariables().auth.user,
+                pass:process.env.PASS_KEY  || getEnviromentVariables().auth.pass
             }
         });
     };

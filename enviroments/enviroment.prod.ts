@@ -4,4 +4,8 @@ import { enviromentInterface } from "../src/Interface/enviroment";
 export const ProdEnviroment:enviromentInterface = {
     db_url: process.env.MONGODB_API_KEY || '',
     jwt_api_key: process.env.JWT_SECRET_KEY_PRODUCTION || 'JWTSECRETKEYPRODUCTION',
+    auth:{
+        user:'mytodo032023@gmail.com',
+        pass:'jkbqafvtmwfmhejt'
+    }
 }
