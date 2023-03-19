@@ -1,6 +1,5 @@
 import { DevEnviroment } from "./enviroment.dev";
 import { ProdEnviroment } from "./enviroment.prod";
-import { enviromentInterface } from "../src/Interface/enviroment";
 
 
 export function getEnviromentVariables(){

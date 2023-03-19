@@ -4,4 +4,5 @@ import { enviromentInterface } from "../src/Interface/enviroment";
 
 export const DevEnviroment:enviromentInterface = {
     db_url: process.env.MONGODB_API_KEY || 'mongodb+srv://Naveen:tzVaX9RbJAyiunNn@swiggycloneapp.rouxifz.mongodb.net/?retryWrites=true&w=majority',
+    jwt_api_key: process.env.JWT_SECRET_KEY_DEVLOPMENT || 'JWTSECRETKEYDEVLOPMENT',
 }

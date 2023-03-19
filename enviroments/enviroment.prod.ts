@@ -3,4 +3,5 @@ import { enviromentInterface } from "../src/Interface/enviroment";
 // dotenv.config({path: './.env'});
 export const ProdEnviroment:enviromentInterface = {
     db_url: process.env.MONGODB_API_KEY || 'mongodb+srv://Naveen:tzVaX9RbJAyiunNn@swiggycloneapp.rouxifz.mongodb.net/?retryWrites=true&w=majority',
+    jwt_api_key: process.env.JWT_SECRET_KEY_PRODUCTION || 'JWTSECRETKEYPRODUCTION',
 }

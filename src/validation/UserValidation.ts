@@ -17,12 +17,12 @@ export class userValidation {
             .withMessage('name must be without spl characters'),
             body('email')
             .isEmail()
-            .custom((email, res) => {
+            .custom((email, {req}) => {
                 return User.findOne({
                     email:email,
                 }).then(usr => {
                     if(usr){
-                        return Promise.reject('User Already Exists');
+                        return Promise.reject('User Already Exist');
                     }else{
                         return true;
                     }
@@ -43,11 +43,32 @@ export class userValidation {
             body('verification_token', 'Email verification token is required').isNumeric(),
             body('email', 'Email is required').isEmail(),
         ]
-    }
+    };
 
     static verifiUserResendEmail(){
         return [
             body('email',' Email is required ').isEmail()
         ];
-    }
+    };
+
+    static login() {
+        return [
+            body('email')
+            .custom((email, { req }) => {
+                return User.findOne({
+                    email:email,
+                }).then(usr => {
+                    console.log(usr)
+                    if(usr){
+                        req.user = usr;
+                        return true;
+                    }else{
+                        return Promise.reject('No user registered with such email');
+                    }
+                }).catch(e => { throw new Error(e) });
+            }),
+            body('password','password is required')
+            .isAlphanumeric(),
+        ]
+    };
 }

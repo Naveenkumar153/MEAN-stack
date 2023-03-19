@@ -7,7 +7,7 @@ export class NodeMailer {
 
     private static initiateTransport(){
         return nodeMailer.createTransport({
-            service:'gmail',
+            service:'gmail' || getEnviromentVariables().jwt_api_key,
             auth:{
                 user:'mytodo032023@gmail.com',
                 pass:process.env.PASS_KEY || 'jkbqafvtmwfmhejt'

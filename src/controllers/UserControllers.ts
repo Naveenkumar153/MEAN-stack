@@ -1,24 +1,20 @@
 import { validationResult } from 'express-validator';
 import * as Bcrypt from 'bcrypt';
+import * as Jwt from 'jsonwebtoken';
 import { NodeMailer } from '../Utils/NodeMailer';
 import { Utils } from '../Utils/Utils';
+import { getEnviromentVariables } from '../../enviroments/enviroment';
 import User from '../Modules/User';
 
 export class UserController {
 
-    private static encrptPassword(req,res,next){
-        return new Promise((resolve, reject) => {
-            Bcrypt.hash(req.body.password,10,(err,hash) => {
-                if(err) reject(err);
-                resolve(hash);
-            });
-        });
-    }
+    
 
     static async signup(req, res, next) {
         const errors = validationResult(req);
         const name = req.body.name;
         const email = req.body.email;
+        const password = req.body.password;
         const verification_token = Utils.generateVerificationToken();
   
 
@@ -27,7 +23,7 @@ export class UserController {
         }else{
             
             try {
-                const hashPassword = await UserController.encrptPassword(req,res,next);
+                const hashPassword = await Utils.encrptPassword(password);
                 const data = {
                     email,
                     password:hashPassword,
@@ -36,6 +32,12 @@ export class UserController {
                     verification_token_time: Date.now() + new Utils().MAX_TOKEN_TIME
                 };
                 let user = await new User(data).save();
+                const payload = {
+                    user_id: user._id,
+                    email:user.email,
+                };
+                const token = Utils.jwtSign(payload);
+
                 await NodeMailer.sendMail({
                     to:[user.email],
                     subject:'Test',
@@ -202,6 +204,7 @@ export class UserController {
                     </html>`,
                 })
                 res.status(200).json({
+                    token:token,
                     message:'Successfully Registered',
                     status:200
                 })
@@ -442,4 +445,43 @@ export class UserController {
         }
     }
 
+    static async login(req,res,next){
+        const errors = validationResult(req);
+
+
+
+        if(!errors.isEmpty()){
+            next(new Error(errors.array()[0].msg));
+        }else{
+
+            try {
+                const user            = req.user
+                const password        = req.body.password;
+                const encrpt_passwrod = user.password;
+    
+                let data = { password, encrpt_passwrod }
+    
+                await Utils.comparedPassword(data);
+    
+                const payload = {
+                    user_id: user._id,
+                    email:user.email,
+                };
+                const token = Utils.jwtSign(payload)
+
+                console.log(token)
+
+                res.status(200).json({
+                    token:token,
+                    message:'Successfully Login',
+                    status:200
+                });
+
+
+            } catch (error) {
+                next(error)
+            }
+        }
+
+    }
 }
