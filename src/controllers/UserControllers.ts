@@ -197,14 +197,18 @@ export class UserController {
                     </body>
                     
                     </html>`,
-                })
-                res.status(200).json({
+                });
+                let userData = {
+                    email: user.email,
                     token:token,
+                    emailVerified:user.email_verified,
+                }
+                res.status(200).json({
+                    data:userData,
                     message:'Successfully Registered',
                     status:200
                 })
             } catch(error) {
-                console.log('error usercontrollers', error)
                 next(error);
             }
         }
