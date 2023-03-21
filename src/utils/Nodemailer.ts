@@ -1,16 +1,15 @@
 import * as nodeMailer from 'nodemailer';
 import * as SendGrid   from  'nodemailer-sendgrid-transport';
 import * as sendGridMail from '@sendgrid/mail'
-import { getEnviromentVariables } from '../../enviroments/enviroment';
 export class NodeMailer {
 
 
     private static initiateTransport(){
         return nodeMailer.createTransport({
-            service:'gmail' || getEnviromentVariables().jwt_api_key,
+            service:process.env.SERVICE_PROVIDER,
             auth:{
-                user:process.env.USER_NAME || getEnviromentVariables().auth.user,
-                pass:process.env.PASS_KEY  || getEnviromentVariables().auth.pass
+                user:process.env.USER_NAME,
+                pass:process.env.PASS_KEY
             }
         });
     };

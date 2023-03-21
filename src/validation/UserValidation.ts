@@ -1,4 +1,3 @@
-import * as express from 'express';
 import { body, query } from "express-validator";
 import User from "../Modules/User";
 
@@ -67,8 +66,6 @@ export class userValidation {
                     }
                 }).catch(e => { throw new Error(e) });
             }),
-            body('password','password is required')
-            .isAlphanumeric(),
         ]
     };
 }

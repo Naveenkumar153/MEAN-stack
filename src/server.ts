@@ -2,7 +2,6 @@ import * as express from 'express';
 import * as mongoose from 'mongoose';
 import * as bodyparse from 'body-parser';
 import * as cors from 'cors';
-import { getEnviromentVariables } from '../enviroments/enviroment';
 import UserRoutes from './Routes/UserRoutes';
 
 export class Server {
@@ -23,7 +22,7 @@ export class Server {
     async connectMongoDB(){
         mongoose.set("strictQuery", true);
         await mongoose.connect(
-            getEnviromentVariables().db_url
+            process.env.MONGODB_API_KEY
         ).then(() => console.log('Mongodb DB connected')).catch(e => console.log(e));
     }
 
@@ -46,6 +45,7 @@ export class Server {
     handleErrors(){
         this.app.use((error, req, res, next) => {
             console.log("Middleware Error Hadnling");
+            console.log(req.body);
             const errorStatus = req.errorStatus || 500;
             res.status(errorStatus).json({
                 message: error.message || 'Something went wrong. Please try again!',

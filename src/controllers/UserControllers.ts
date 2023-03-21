@@ -1,14 +1,9 @@
 import { validationResult } from 'express-validator';
-import * as Bcrypt from 'bcrypt';
-import * as Jwt from 'jsonwebtoken';
 import { NodeMailer } from '../Utils/NodeMailer';
 import { Utils } from '../Utils/Utils';
-import { getEnviromentVariables } from '../../enviroments/enviroment';
 import User from '../Modules/User';
 
-export class UserController {
-
-    
+export class UserController {    
 
     static async signup(req, res, next) {
         const errors = validationResult(req);
@@ -455,12 +450,14 @@ export class UserController {
         }else{
 
             try {
+                console.log(req.user)
                 const user            = req.user
                 const password        = req.body.password;
                 const encrpt_passwrod = user.password;
     
                 let data = { password, encrpt_passwrod }
-    
+
+
                 await Utils.comparedPassword(data);
     
                 const payload = {
