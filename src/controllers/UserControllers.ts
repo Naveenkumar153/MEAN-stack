@@ -2,6 +2,7 @@ import { validationResult } from 'express-validator';
 import { NodeMailer } from '../Utils/NodeMailer';
 import { Utils } from '../Utils/Utils';
 import User from '../Modules/User';
+import { JWT } from '../utils/Jwt';
 
 export class UserController {    
 
@@ -31,7 +32,7 @@ export class UserController {
                     user_id: user._id,
                     email:user.email,
                 };
-                const token = Utils.jwtSign(payload);
+                const token = JWT.jwtSign(payload);
 
                 await NodeMailer.sendMail({
                     to:[user.email],
@@ -216,7 +217,8 @@ export class UserController {
 
     static async verify(req, res, next) {
         const verification_token = req.body.verification_token;
-        const email = req.body.email;
+        // const email = req.body.email;
+        const email = req.user.email;
         const errors = validationResult(req);
         try {
             if(!errors.isEmpty()){
@@ -249,9 +251,20 @@ export class UserController {
     }
 
     static async resendVerificationEmail(req,res,next){
+
+        // res.send(req.decoded);
+        // if(req.decoded){
+        //     return;
+        // }
+        // else{
+        //     console.log("don't run below code");
+        //     return;
+        // }
+
         console.log(req.body)
         console.log(req.query)
-        const email = req.body.email;
+        // const email = req.body.email;
+        const email = req.user.email;
         const verification_token = Utils.generateVerificationToken();
         console.log(email)
         try {
@@ -468,7 +481,7 @@ export class UserController {
                     user_id: user._id,
                     email:user.email,
                 };
-                const token = Utils.jwtSign(payload)
+                const token = JWT.jwtSign(payload)
 
                 console.log(token)
 

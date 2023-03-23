@@ -1,5 +1,4 @@
 import * as Bcrypt from 'bcrypt';
-import * as Jwt from 'jsonwebtoken';
 export class Utils {
     constructor(){
 
@@ -37,12 +36,6 @@ export class Utils {
         });
     };
 
-    static jwtSign(payload){
-        return Jwt.sign(
-            payload,
-            process.env.JWT_SECRET_KEY_PRODUCTION,
-            { expiresIn:'180d' },
-        )
-    }
+   
 
 }

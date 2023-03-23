@@ -44,7 +44,7 @@ export class userValidation {
         ]
     };
 
-    static verifiUserResendEmail(){
+    static verifyUser(){
         return [
             body('email',' Email is required ').isEmail()
         ];
