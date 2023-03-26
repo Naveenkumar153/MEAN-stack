@@ -37,16 +37,9 @@ export class userValidation {
         ]
     };
 
-    static verifyUserEmail(){
-        return [
-            body('verification_token', 'Email verification token is required').isNumeric(),
-            body('email', 'Email is required').isEmail(),
-        ]
-    };
-
     static verifyUser(){
         return [
-            body('email',' Email is required ').isEmail()
+            body('verification_token',' Email verification_token is required ').isNumeric()
         ];
     };
 

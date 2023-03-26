@@ -15,6 +15,7 @@ export class UserController {
   
 
         if(!errors.isEmpty()){
+            req.errorStatus = 400;
             next(new Error(errors.array()[0].msg));
         }else{
             
@@ -218,14 +219,14 @@ export class UserController {
     static async verify(req, res, next) {
         const verification_token = req.body.verification_token;
         // const email = req.body.email;
+        console.log(verification_token);
         const email = req.user.email;
         const errors = validationResult(req);
         try {
             if(!errors.isEmpty()){
+                req.errorStatus = 400;
                 next(new Error(errors.array()[0].msg));
             }
-
-
             const user = await User.findOneAndUpdate(
                 {
                     email: email,
@@ -239,11 +240,16 @@ export class UserController {
                     new: true
                 }
             );
-            
+
             if(user) {
-                res.send(user);
+                res.status(200).json({
+                    data:user.email_verified,
+                    message:'Your Email successfully verified',
+                    status:200
+                });
             } else {
-                throw new Error('Email Verification Token Is Expired. Please try again...');
+                req.errorStatus = 400;
+                throw new Error('Wrong OTP or Email Verification Token Is Expired. Please try again...');
             }
         } catch(e) {
             next(e);
@@ -251,22 +257,10 @@ export class UserController {
     }
 
     static async resendVerificationEmail(req,res,next){
-
-        // res.send(req.decoded);
-        // if(req.decoded){
-        //     return;
-        // }
-        // else{
-        //     console.log("don't run below code");
-        //     return;
-        // }
-
         console.log(req.body)
-        console.log(req.query)
-        // const email = req.body.email;
+        console.log(req.user)
         const email = req.user.email;
         const verification_token = Utils.generateVerificationToken();
-        console.log(email)
         try {
             const user = await User.findOneAndUpdate(
                 {  email: email },
@@ -444,8 +438,10 @@ export class UserController {
                     </html>`,
                 });
                 res.status(200).json({
-                    message:'Email Verified Successfully ',
-                    status:200
+                    data:{
+                        message:'Resend OTP successfully sent',
+                        status:200
+                    }
                 })
             }else{
                 throw new Error("User doesn't exist");
@@ -463,6 +459,7 @@ export class UserController {
 
 
         if(!errors.isEmpty()){
+            req.errorStatus = 400;
             next(new Error(errors.array()[0].msg));
         }else{
 
@@ -472,10 +469,10 @@ export class UserController {
                 const password        = req.body.password;
                 const encrpt_passwrod = user.password;
     
-                let data = { password, encrpt_passwrod }
+                let data = {  password, encrpt_passwrod }
 
 
-                await Utils.comparedPassword(data);
+                await Utils.comparedPassword(req,data);
     
                 const payload = {
                     user_id: user._id,
@@ -485,8 +482,13 @@ export class UserController {
 
                 console.log(token)
 
-                res.status(200).json({
+                let userData = {
+                    email: user.email,
                     token:token,
+                    emailVerified:user.email_verified,
+                }
+                res.status(200).json({
+                    data:userData,
                     message:'Successfully Login',
                     status:200
                 });
