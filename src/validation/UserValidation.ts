@@ -11,9 +11,7 @@ export class userValidation {
             body('username')
             .isString()
             .isLength({min:3, max:20})
-            .withMessage('name must between 3 and 20 characters')
-            .matches(this.noSplCharacters)
-            .withMessage('name must be without spl characters'),
+            .withMessage('name must between 3 and 20 characters'),
             body('email')
             .isEmail()
             .custom((email, {req}) => {
@@ -50,9 +48,9 @@ export class userValidation {
                 return User.findOne({
                     email:email,
                 }).then(usr => {
-                    console.log(usr)
+                    console.log(req.body)
                     if(usr){
-                        req.user = usr;
+                        req.user = usr;                        
                         return true;
                     }else{
                         return Promise.reject('No user registered with such email');
@@ -61,4 +59,67 @@ export class userValidation {
             }),
         ]
     };
+
+    static checkResetPasswordEmail(){
+        return [
+            body('email')
+            .custom((email, { req }) => {
+                return User.findOne({
+                    email:email,
+                }).then(usr => {
+                    console.log(req.body)
+                    if(usr){
+                        req.user = usr;                        
+                        return true;
+                    }else{
+                        req.errorStatus = 400;
+                        return Promise.reject('No user registered with such email');
+                    }
+                }).catch(e => { throw new Error(e) });
+            }),
+        ]
+    };
+
+    static verifyResetPassword(){
+        return [
+            body('reset_password_token').isNumeric()
+            .custom((reset_password_token, { req }) => {
+                return User.findOne({
+                    reset_password_token:reset_password_token,
+                    reset_password_token_time: { $gt:Date.now() }
+                }).then(user => {
+                     if(user){
+                        req.user = user; 
+                        return true;
+                     }else{
+                        return Promise.reject('Reset password token doesn"t exist. please generate new OTP');
+                     }
+                }).catch(e => {  throw new Error(e) });
+            })
+        ]
+    };
+
+    static resetPassword(){
+        return [
+            body('email')
+            .custom((email, { req }) => {
+                return User.findOne({
+                    email:email,
+                }).then(usr => {
+                    console.log(req.body)
+                    if(usr){
+                        req.user = usr;                        
+                        return true;
+                    }else{
+                        return Promise.reject('No user registered with such email');
+                    }
+                }).catch(e => { throw new Error(e) });
+            }),
+            body('password')
+            .isLength({min:8, max:20})
+            .withMessage('password must between 8 and 20 characters')
+            .matches(this.isPasswordValidation)
+            .withMessage('password at least a one symbol,one upper and one lower case letters and one number') 
+        ]
+    }
 }
