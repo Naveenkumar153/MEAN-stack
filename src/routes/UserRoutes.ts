@@ -17,19 +17,16 @@ export class UserRouter {
     getRoutes(){
         this.router.get('/send/verification-email', GlobalMiddleWare.authGuard, UserController.resendVerificationEmail);
         this.router.get('/send/resetpassword/verification-email', UserController.sendResetPasswordOtp);
-        // this.router.get('/send/verification-email', userValidation.verifiUserResendEmail(), UserController.resendVerificationEmail);
     };
     postRoutes(){
-        // this.router.post('/signup', userValidation.signUpValidation(), GlobalMiddleWare.checkError, UserController.signup);
         this.router.post('/signup', userValidation.signUpValidation(), UserController.signup);
         this.router.post('/login', userValidation.login(), UserController.login);
-        this.router.post('/send/reset/passwordotp', userValidation.checkResetPasswordEmail(), UserController.sendResetPasswordOtp);
+        this.router.post('/send/reset/passwordotp', userValidation.sendResetPasswordOtp(), UserController.sendResetPasswordOtp);
         this.router.post('/verify/resetpassword', userValidation.verifyResetPassword(), UserController.verifyResetPassword);
     };
     putRoutes(){};
     patchRoutes(){ 
-        // this.router.patch('/verify', userValidation.verifyUserEmail(), GlobalMiddleWare.checkError, UserController.verify);
-        this.router.patch('/verify', userValidation.verifyUser(), GlobalMiddleWare.authGuard ,UserController.verify);
+        this.router.patch('/verify/emailotp', GlobalMiddleWare.authGuard, userValidation.verifyEmailOtp() ,UserController.verifyEmailOtp);
         this.router.patch('/reset/password', userValidation.resetPassword(),UserController.resetPassword);
     };
     deleteRoutes(){};

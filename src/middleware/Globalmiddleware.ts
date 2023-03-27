@@ -19,14 +19,22 @@ export class GlobalMiddleWare {
     static async authGuard(req,res,next){
         const header_auth = req.headers.authorization;
         const token       = header_auth ? header_auth.slice(7, header_auth.length) : null;
+        // alternate way 
+        // const authHeader  = header_auth.split(' ');
+        // const token       = authHeader[1];
         console.log('authGuard' , token);
         try {
-            req.errorStatus = 401;
-            const decoded   = await JWT.jwtVerify(token);
-            req.user     = decoded; 
-            next();
+            if(!token){
+                req.errorStatus = 401;
+                next( new Error("User doesn't exist"));
+            }else{
+                const decoded   = await JWT.jwtVerify(token);
+                req.user     = decoded; 
+                next();
+            }
         } catch (error) {
-            next(error)
+            req.errorStatus = 401;
+            next( new Error("User doesn't exist"));
         }
     }
 

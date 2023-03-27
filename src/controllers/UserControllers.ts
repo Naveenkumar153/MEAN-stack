@@ -218,7 +218,7 @@ export class UserController {
         }
     }
 
-    static async verify(req, res, next) {
+    static async verifyEmailOtp(req, res, next) {
         const verification_token = req.body.verification_token;
         // const email = req.body.email;
         console.log(verification_token);

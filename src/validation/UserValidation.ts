@@ -35,7 +35,7 @@ export class userValidation {
         ]
     };
 
-    static verifyUser(){
+    static verifyEmailOtp(){
         return [
             body('verification_token',' Email verification_token is required ').isNumeric()
         ];
@@ -60,7 +60,7 @@ export class userValidation {
         ]
     };
 
-    static checkResetPasswordEmail(){
+    static sendResetPasswordOtp(){
         return [
             body('email')
             .custom((email, { req }) => {
