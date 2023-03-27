@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { UserController } from "../Controllers/UserControllers";
-import { GlobalMiddleWare } from "../Middleware/Globalmiddleware";
-import { userValidation } from "../Validation/UserValidation";
+import { UserController } from "../controllers/UserControllers";
+import { GlobalMiddleWare } from "../middleware/Globalmiddleware";
+import { userValidation } from "../validation/UserValidation";
 
 export class UserRouter {
     public router: Router;

@@ -2,7 +2,7 @@ import * as express from 'express';
 import * as mongoose from 'mongoose';
 import * as bodyparse from 'body-parser';
 import * as cors from 'cors';
-import UserRoutes from './Routes/UserRoutes';
+import UserRoutes from './routes/UserRoutes';
 
 export class Server {
     public app: express.Application = express();

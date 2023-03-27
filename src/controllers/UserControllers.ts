@@ -1,8 +1,8 @@
 import { validationResult } from 'express-validator';
-import { NodeMailer } from '../Utils/NodeMailer';
-import { Utils } from '../Utils/Utils';
+import { Utils } from '../utils/Utils';
 import User from '../Modules/User';
 import { JWT } from '../utils/Jwt';
+import { NodeMailer } from '../utils/Nodemailer';
 
 export class UserController {    
 
