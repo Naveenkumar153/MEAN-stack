@@ -938,5 +938,22 @@ export class UserController {
             } catch (error) {
                 next(error)
             }
+    };
+
+
+
+    static async eachUserData(req,res,next){
+         let user = req.user;
+         try {
+            const profile = await User.findById(user.user_id);
+            res.status(200).json({
+                data:profile.todos,
+                message:'Data Successfully fetched',
+                status:200,
+            });
+
+         } catch (error) {
+            next(error);
+         }
     }
 }

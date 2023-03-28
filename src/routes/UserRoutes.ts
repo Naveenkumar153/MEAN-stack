@@ -17,6 +17,7 @@ export class UserRouter {
     getRoutes(){
         this.router.get('/send/verification-email', GlobalMiddleWare.authGuard, UserController.resendVerificationEmail);
         this.router.get('/send/resetpassword/verification-email', UserController.sendResetPasswordOtp);
+        this.router.get('/getTodos', GlobalMiddleWare.authGuard, UserController.eachUserData);
     };
     postRoutes(){
         this.router.post('/signup', userValidation.signUpValidation(), UserController.signup);
