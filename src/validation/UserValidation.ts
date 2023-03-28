@@ -1,4 +1,4 @@
-import { body, query } from "express-validator";
+import { body, check, query } from "express-validator";
 import User from "../Modules/User";
 
 export class userValidation {
@@ -120,6 +120,21 @@ export class userValidation {
             .withMessage('password must between 8 and 20 characters')
             .matches(this.isPasswordValidation)
             .withMessage('password at least a one symbol,one upper and one lower case letters and one number') 
+        ]
+    };
+
+    static addTodos(){
+        return [
+            body('title')
+            .custom((title,{ req }) => {
+                // console.log('req.body',  req.body)
+                console.log('req.body.title',  title)
+                if(title == ' ' || title == null || title ==  undefined){
+                    return Promise.reject('todo value is required');
+                }else{
+                    return true;
+                }
+            })
         ]
     }
 }

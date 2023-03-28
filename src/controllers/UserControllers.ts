@@ -955,5 +955,51 @@ export class UserController {
          } catch (error) {
             next(error);
          }
+    };
+
+    static async addTodos(req,res,next){
+        const errors = validationResult(req);
+
+        const title  = req.body.title;
+        const userId = req.body.id;
+        // const user   = req.user;
+
+        // console.log(title);
+        // console.log(userId);
+        // console.log(user);
+
+        try {
+            
+
+            if(!errors.isEmpty()){
+                req.errorStatus = 400;
+                next(new Error(errors.array()[0].msg));
+            }else{
+
+                let user = await User.findById(userId);
+                if(!user){
+                    req.errorStatus = 404;
+                    next(new Error('User not found'));
+                }else{
+
+                    let user = await new User()
+                    user.todos.push(title);
+                    await user.save();
+
+                    res.status(200).json({
+                        data:user.todos,
+                        message:'added',
+                        status:200
+                    });
+                }
+
+
+            }
+
+
+        } catch (error) {
+            next(error)
+        }
+
     }
 }

@@ -24,6 +24,7 @@ export class UserRouter {
         this.router.post('/login', userValidation.login(), UserController.login);
         this.router.post('/send/reset/passwordotp', userValidation.sendResetPasswordOtp(), UserController.sendResetPasswordOtp);
         this.router.post('/verify/resetpassword', userValidation.verifyResetPassword(), UserController.verifyResetPassword);
+        this.router.post('/create/todos',GlobalMiddleWare.authGuard,UserController.addTodos);
     };
     putRoutes(){};
     patchRoutes(){ 
