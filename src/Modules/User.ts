@@ -1,11 +1,6 @@
 import * as mongoose from 'mongoose';
 import { model } from 'mongoose';
 
-
-// const todoSchema = new mongoose.Schema({
-//     title: { type:String, require:true  },
-// });
-
 const userSchema = new mongoose.Schema({
     userName                 : { type:String, require:true },
     email                    : { type:String, require:true },
@@ -13,7 +8,7 @@ const userSchema = new mongoose.Schema({
     verification_token       : { type: String, require:true },
     verification_token_time  : { type:Date, require:true },
     password                 : { type:String, require:true },
-    todos                    : [  ],
+    todos                    : [ ],
     reset_password_token     : { type: String, require:true },
     reset_password_token_time: { type:Date, require:true },
     created_at               : { type:Date, require:true, default:new Date() },
