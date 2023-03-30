@@ -22,7 +22,6 @@ export class GlobalMiddleWare {
         // alternate way 
         // const authHeader  = header_auth.split(' ');
         // const token       = authHeader[1];
-        console.log('authGuard' , token);
         try {
             if(!token){
                 req.errorStatus = 401;

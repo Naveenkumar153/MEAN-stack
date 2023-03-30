@@ -22,7 +22,7 @@ export class Server {
     async connectMongoDB(){
         mongoose.set("strictQuery", true);
         await mongoose.connect(
-            process.env.MONGODB_API_KEY
+            process.env.MONGODB_API_KEY,
         ).then(() => console.log('Mongodb DB connected')).catch(e => console.log(e));
     }
 

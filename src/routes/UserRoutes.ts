@@ -30,8 +30,11 @@ export class UserRouter {
     patchRoutes(){ 
         this.router.patch('/verify/emailotp', GlobalMiddleWare.authGuard, userValidation.verifyEmailOtp() ,UserController.verifyEmailOtp);
         this.router.patch('/reset/password', userValidation.resetPassword(),UserController.resetPassword);
+        this.router.patch('/updateTodos', GlobalMiddleWare.authGuard, UserController.updateTodos);
     };
-    deleteRoutes(){};
+    deleteRoutes(){
+        this.router.delete('/deleteTodos', GlobalMiddleWare.authGuard, UserController.deleteTodos);
+    };
     
 }
 

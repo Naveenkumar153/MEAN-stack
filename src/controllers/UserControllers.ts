@@ -3,12 +3,15 @@ import { Utils } from '../utils/Utils';
 import User from '../Modules/User';
 import { JWT } from '../utils/Jwt';
 import { NodeMailer } from '../utils/Nodemailer';
+const mongoose = require('mongoose');
+
 
 export class UserController {    
 
     static async signup(req, res, next) {
         const errors = validationResult(req);
-        const { userName, email, password }  = req.body;
+        const { username, email, password }  = req.body;
+        console.log(username);
         const verification_token = Utils.generateVerificationToken();
 
         if(!errors.isEmpty()){
@@ -21,7 +24,7 @@ export class UserController {
             const data = {
                 email,
                 password:hashPassword,
-                userName,
+                userName:username,
                 verification_token,
                 verification_token_time: Date.now() + new Utils().MAX_TOKEN_TIME
             };
@@ -202,6 +205,8 @@ export class UserController {
                 _id    : user._id,
                 email  : user.email,
                 token  : token,
+                email_verify:user.email_verified,
+                userName:user.userName
             }
             res.status(200).json({
                 data:userData,
@@ -237,8 +242,11 @@ export class UserController {
                 }
             );
 
+            let data = user.email_verified;
+
             if(user) {
                 res.status(200).json({
+                    data:data,
                     message:'Your Email successfully verified',
                     status:200
                 });
@@ -465,6 +473,7 @@ export class UserController {
                 email        : user.email,
                 token        : token,
                 emailVerified: user.email_verified,
+                userName:user.userName
             }
             res.status(200).json({
                 data:userData,
@@ -946,6 +955,39 @@ export class UserController {
 
     static async addTodos(req,res,next){
         const { completed, title, id } = req.body;
+      
+        try {
+            const findUserIdThenUpdate = await User.findOneAndUpdate(
+                { _id: id,  },
+                {
+                    updated_at:new Date(),
+                },
+                { new:true }
+            );
+
+            if(!findUserIdThenUpdate){
+                req.errorStatus = 404;
+                next(new Error('User not found'));
+            }
+
+            const newId = mongoose.Types.ObjectId();
+            findUserIdThenUpdate.todos.push({ _id:newId, title, completed:completed });
+
+            await findUserIdThenUpdate.save();
+            res.status(200).json({
+                data:findUserIdThenUpdate.todos,
+                message:'todo successfully added',
+                status:200
+            });
+
+
+        } catch (error) {
+            next(error)
+        }
+
+    };
+    static async updateTodos(req,res,next){
+        const { completed, title, id } = req.body;
         try {
             const findUserIdThenUpdate = await User.findOneAndUpdate(
                 { _id: id,  },
@@ -965,6 +1007,47 @@ export class UserController {
             res.status(200).json({
                 data:findUserIdThenUpdate.todos,
                 message:'todo successfully added',
+                status:200
+            });
+
+
+        } catch (error) {
+            next(error)
+        }
+
+    };
+    static async deleteTodos(req,res,next){
+        console.log(req.query)
+        const { userId, todoId } = req.query;
+        console.log('userid',userId);
+        console.log('todoId',todoId);
+        try {
+            const findUserIdThenUpdate = await User.findByIdAndUpdate(
+                { _id: userId,  },
+                {
+                    $pull: { todos: { _id: todoId} },
+                },
+                { multi:false }
+            );
+
+            // const filter = { _id: userId };
+            // const update = { $pull: { todo: { _id: todoId } } };
+        
+            // const result = await User.updateOne(filter, update);
+
+
+            if(!findUserIdThenUpdate){
+                req.errorStatus = 404;
+                next(new Error('User not found'));
+            };
+
+
+            // findUserIdThenUpdate.todos.filter(todoId => todoId._id == todoId)
+            // await findUserIdThenUpdate.save();
+            console.log(findUserIdThenUpdate)
+            res.status(200).json({
+                data:findUserIdThenUpdate,
+                message:'todo successfully deleted',
                 status:200
             });
 
