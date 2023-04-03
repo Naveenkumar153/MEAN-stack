@@ -969,7 +969,6 @@ export class UserController {
                 req.errorStatus = 404;
                 next(new Error('User not found'));
             }
-
             const newId = mongoose.Types.ObjectId();
             findUserIdThenUpdate.todos.push({ _id:newId, title, completed:completed });
 
@@ -980,36 +979,39 @@ export class UserController {
                 status:200
             });
 
-
         } catch (error) {
             next(error)
         }
 
     };
     static async updateTodos(req,res,next){
-        const { completed, title, id } = req.body;
+        const { userId, todo } = req.body;
+        
         try {
-            const findUserIdThenUpdate = await User.findOneAndUpdate(
-                { _id: id,  },
-                {
-                    updated_at:new Date(),
-                },
-                { new:true }
-            );
-
-            if(!findUserIdThenUpdate){
-                req.errorStatus = 404;
-                next(new Error('User not found'));
-            }
-
-            findUserIdThenUpdate.todos.push({ title:title, completed:completed });
-            await findUserIdThenUpdate.save();
+            const user = await User.findOne({ _id: userId });
+                if (!user) {
+                    console.log(`User with _id ${userId} not found.`);
+                    return res.status(404).json({
+                        message:`User with _id ${userId} not found.`,
+                        status:404
+                    });
+                };
+                const todoObjectId = mongoose.Types.ObjectId(todo._id);
+                const updateResult = await User.updateOne(
+                    { _id: userId, 'todos._id': todoObjectId },
+                    { $set: { 'todos.$.title': todo.title }, updated_at:new Date(), }
+                );
+                if (updateResult.modifiedCount === 0) {
+                    return res.status(404).json({
+                        message:`Todo with _id ${todoObjectId} not found in user's todos array.`,
+                        status:404
+                    });
+                }
             res.status(200).json({
-                data:findUserIdThenUpdate.todos,
-                message:'todo successfully added',
+                data:updateResult,
+                message:'todo successfully updated',
                 status:200
             });
-
 
         } catch (error) {
             next(error)
@@ -1017,40 +1019,31 @@ export class UserController {
 
     };
     static async deleteTodos(req,res,next){
-        console.log(req.query)
         const { userId, todoId } = req.query;
-        console.log('userid',userId);
-        console.log('todoId',todoId);
         try {
-            const findUserIdThenUpdate = await User.findByIdAndUpdate(
-                { _id: userId,  },
-                {
-                    $pull: { todos: { _id: todoId} },
-                },
-                { multi:false }
-            );
-
-            // const filter = { _id: userId };
-            // const update = { $pull: { todo: { _id: todoId } } };
-        
-            // const result = await User.updateOne(filter, update);
-
-
-            if(!findUserIdThenUpdate){
-                req.errorStatus = 404;
-                next(new Error('User not found'));
-            };
-
-
-            // findUserIdThenUpdate.todos.filter(todoId => todoId._id == todoId)
-            // await findUserIdThenUpdate.save();
-            console.log(findUserIdThenUpdate)
-            res.status(200).json({
-                data:findUserIdThenUpdate,
-                message:'todo successfully deleted',
-                status:200
-            });
-
+            const user = await User.findOne({ _id: userId });
+                if (!user) {
+                    return res.status(404).json({
+                        message:`User with _id ${userId} not found.`,
+                        status:404
+                    });
+                };
+                const todoObjectId = mongoose.Types.ObjectId(todoId);
+                const updateResult = await User.updateOne(
+                        { _id: userId },
+                        { $pull: { todos:  { _id: todoObjectId}, updated_at:new Date(),  } }
+                    );
+                if (updateResult.modifiedCount === 0) {
+                    return res.status(404).json({
+                        message:`Todo with _id ${todoId} not found in user's todos array.`,
+                        status:404
+                    })
+                }
+                res.status(200).json({
+                    data:updateResult,
+                    message:'todo successfully deleted',
+                    status:200
+                });
 
         } catch (error) {
             next(error)

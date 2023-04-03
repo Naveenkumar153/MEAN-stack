@@ -28,6 +28,13 @@ export class GlobalMiddleWare {
                 next( new Error("User doesn't exist"));
             }else{
                 const decoded   = await JWT.jwtVerify(token);
+
+                if (Date.now() >= decoded.exp * 1000) {
+                    req.errorStatus = 401;
+                    next(new Error("User section is expirted"));
+                    console.log(' decoded ', decoded);
+                    return false;
+                }
                 req.user     = decoded; 
                 next();
             }
