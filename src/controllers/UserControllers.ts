@@ -999,7 +999,7 @@ export class UserController {
                 const todoObjectId = mongoose.Types.ObjectId(todo._id);
                 const updateResult = await User.updateOne(
                     { _id: userId, 'todos._id': todoObjectId },
-                    { $set: { 'todos.$.title': todo.title }, updated_at:new Date(), }
+                    { $set: { 'todos.$.title': todo.title, 'todos.$.completed': todo.completed }, updated_at:new Date(), }
                 );
                 if (updateResult.modifiedCount === 0) {
                     return res.status(404).json({
@@ -1021,7 +1021,7 @@ export class UserController {
     static async deleteTodos(req,res,next){
         const { userId, todoId } = req.query;
         try {
-            const user = await User.findOne({ _id: userId });
+                const user = await User.findOne({ _id: userId });
                 if (!user) {
                     return res.status(404).json({
                         message:`User with _id ${userId} not found.`,
@@ -1030,9 +1030,9 @@ export class UserController {
                 };
                 const todoObjectId = mongoose.Types.ObjectId(todoId);
                 const updateResult = await User.updateOne(
-                        { _id: userId },
-                        { $pull: { todos:  { _id: todoObjectId}, updated_at:new Date(),  } }
-                    );
+                    { _id: userId },
+                    { $pull: { todos:  { _id: todoObjectId} } , updated_at:new Date(), }
+                  );
                 if (updateResult.modifiedCount === 0) {
                     return res.status(404).json({
                         message:`Todo with _id ${todoId} not found in user's todos array.`,

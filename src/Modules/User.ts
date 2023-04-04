@@ -8,7 +8,16 @@ const userSchema = new mongoose.Schema({
     verification_token       : { type: String, require:true },
     verification_token_time  : { type:Date, require:true },
     password                 : { type:String, require:true },
-    todos                    : [ ],
+    todos                    : [ 
+        {
+            completed: Boolean,
+            title: String,
+            _id: {
+              type: mongoose.Schema.Types.ObjectId,
+              auto: true
+            }
+        }
+     ],
     reset_password_token     : { type: String, require:true },
     reset_password_token_time: { type:Date, require:true },
     created_at               : { type:Date, require:true, default:new Date() },
