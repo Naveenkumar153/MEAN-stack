@@ -986,7 +986,7 @@ export class UserController {
     };
     static async updateTodos(req,res,next){
         const { userId, todo } = req.body;
-        
+        console.log('todo', todo)
         try {
             const user = await User.findOne({ _id: userId });
                 if (!user) {

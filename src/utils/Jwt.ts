@@ -11,7 +11,7 @@ export class JWT {
         return Jwt.sign(
             payload,
             process.env.JWT_SECRET_KEY_PRODUCTION,
-            { expiresIn:'180d' },
+            { expiresIn:'1h' },
         )
     };
 
