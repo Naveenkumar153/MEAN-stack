@@ -4,7 +4,7 @@ export class Utils {
 
     } 
 
-    public MAX_TOKEN_TIME = ( 5 * 60 * 1000 );
+    public MAX_TOKEN_TIME = ( 2 * 60 * 1000 );
     // generateOTP function
     static generateVerificationToken(digit:number = 6):number{
         let otp:any = '';     

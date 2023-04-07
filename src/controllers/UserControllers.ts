@@ -234,7 +234,7 @@ export class UserController {
                     verification_token_time: {$gt: Date.now()}
                 },
                 {
-                    email_verified: true,
+                    email_verified:true,
                     updated_at:new Date(), 
                 },
                 {
@@ -242,7 +242,12 @@ export class UserController {
                 }
             );
 
-            let data = user.email_verified;
+            let data = user?.email_verified;
+
+            if(!user){
+                req.errorStatus = 400;
+                throw new Error('Wrong OTP or Email Verification Token Is Expired. Please try again...');
+            }
 
             if(user) {
                 res.status(200).json({
@@ -250,9 +255,6 @@ export class UserController {
                     message:'Your Email successfully verified',
                     status:200
                 });
-            } else {
-                req.errorStatus = 400;
-                throw new Error('Wrong OTP or Email Verification Token Is Expired. Please try again...');
             }
         } catch(e) {
             next(e);
@@ -719,15 +721,19 @@ export class UserController {
                     }
                 );
 
+                if(!user){
+                    req.errorStatus = 400;
+                    throw new Error('Wrong OTP or Email Verification Token Is Expired. Please try again...');
+                }
+
                 if(user) {
                     res.status(200).json({
                         message:'Your OTP successfully verified',
                         status:200
                     });
-                } else {
-                    req.errorStatus = 400;
-                    throw new Error('Wrong OTP or Email Verification Token Is Expired. Please try again...');
                 }
+                    
+                
             }
         } catch(e) {
             next(e);

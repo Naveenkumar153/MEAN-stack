@@ -92,7 +92,7 @@ export class userValidation {
                         req.user = user; 
                         return true;
                      }else{
-                        return Promise.reject('Reset password token doesn"t exist. please generate new OTP');
+                        return Promise.reject('Wrong OTP or Email Verification Token Is Expired. Please try again...');
                      }
                 }).catch(e => {  throw new Error(e) });
             })

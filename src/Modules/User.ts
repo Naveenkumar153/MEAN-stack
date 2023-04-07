@@ -24,4 +24,4 @@ const userSchema = new mongoose.Schema({
     updated_at               : { type:Date, require:true, default:new Date() },
 });
 
-export default model('users_credentials', userSchema);
+export default model('todo_app', userSchema);
