@@ -3,6 +3,7 @@ import * as mongoose from 'mongoose';
 import * as bodyparse from 'body-parser';
 import * as cors from 'cors';
 import UserRoutes from './routes/UserRoutes';
+import path = require('path');
 
 export class Server {
     public app: express.Application = express();
@@ -11,6 +12,7 @@ export class Server {
         this.setConfig();
         this.setRoutes();
         this.handleErrors();
+        this.setFrontend();
     }
     
     setConfig(){
@@ -41,6 +43,12 @@ export class Server {
         this.app.use('/api/user', UserRoutes);
     };
     
+    setFrontend(){
+        this.app.use(express.static('frontend'))
+        this.app.get('*',(req,res) => {
+            res.sendFile(path.join(__dirname,'../frontend/index.html'))
+        })
+    }
 
     handleErrors(){
         this.app.use((error, req, res, next) => {
