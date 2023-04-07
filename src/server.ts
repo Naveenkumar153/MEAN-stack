@@ -1,12 +1,14 @@
-import * as express from 'express';
+// import * as express from 'express';
 import * as mongoose from 'mongoose';
 import * as bodyparse from 'body-parser';
-import * as cors from 'cors';
+// import * as cors from 'cors';
+const express = require('express');
+const cors = require('cors');
 import UserRoutes from './routes/UserRoutes';
 import path = require('path');
 
 export class Server {
-    public app: express.Application = express();
+    public app = express();
     constructor(
     ){
         this.setConfig();

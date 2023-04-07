@@ -5,6 +5,7 @@
       "outDir": "dist",
       "sourceMap": false,
       "declaration": true,
+      "esModuleInterop": true,
       "lib": [
         "es2017.object",
         "es2015",
