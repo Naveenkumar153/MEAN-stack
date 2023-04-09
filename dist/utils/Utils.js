@@ -24,7 +24,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Utils = void 0;
-const Bcrypt = __importStar(require("bcrypt"));
+const Bcryptjs = __importStar(require("bcryptjs"));
 class Utils {
     constructor() {
         this.MAX_TOKEN_TIME = (2 * 60 * 1000);
@@ -40,7 +40,7 @@ class Utils {
     ;
     static encrptPassword(password) {
         return new Promise((resolve, reject) => {
-            Bcrypt.hash(password, 10, (err, hash) => {
+            Bcryptjs.hash(password, 10, (err, hash) => {
                 if (err)
                     reject(err);
                 resolve(hash);
@@ -49,7 +49,7 @@ class Utils {
     }
     static comparedPassword(req, data) {
         return new Promise((resolve, reject) => {
-            Bcrypt.compare(data.password, data.encrpt_passwrod, (err, same) => {
+            Bcryptjs.compare(data.password, data.encrpt_passwrod, (err, same) => {
                 if (err) {
                     reject(err);
                 }

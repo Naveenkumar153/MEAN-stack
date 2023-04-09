@@ -1,4 +1,5 @@
 import * as Bcrypt from 'bcrypt';
+import * as Bcryptjs from 'bcryptjs';
 export class Utils {
     constructor(){
 
@@ -16,7 +17,7 @@ export class Utils {
 
     static encrptPassword(password): Promise<any> {
         return new Promise((resolve, reject) => {
-            Bcrypt.hash(password,10,(err,hash) => {
+            Bcryptjs.hash(password,10,(err,hash) => {
                 if(err) reject(err);
                 resolve(hash);
             });
@@ -24,7 +25,7 @@ export class Utils {
     }
     static comparedPassword(req, data:{password:string, encrpt_passwrod:string }): Promise<any>{
         return new Promise((resolve, reject) => {
-            Bcrypt.compare( data.password,data.encrpt_passwrod,(err,same) => {
+            Bcryptjs.compare( data.password,data.encrpt_passwrod,(err,same) => {
                 if(err){
                   reject(err)
                 } else if(!same) { 
