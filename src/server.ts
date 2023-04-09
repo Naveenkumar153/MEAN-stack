@@ -14,7 +14,7 @@ export class Server {
         this.setConfig();
         this.setRoutes();
         this.handleErrors();
-        this.setFrontend();
+        // this.setFrontend();
     }
     
     setConfig(){
