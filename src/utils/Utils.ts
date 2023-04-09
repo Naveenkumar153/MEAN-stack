@@ -1,4 +1,3 @@
-import * as Bcrypt from 'bcrypt';
 import * as Bcryptjs from 'bcryptjs';
 export class Utils {
     constructor(){
