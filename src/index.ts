@@ -1,5 +1,5 @@
 const dotenv = require('dotenv');
-import { Server } from "./src/server";
+import { Server } from "./server";
 dotenv.config({path: './.env'});
 
 let server = new Server().app;

@@ -19,7 +19,7 @@
     "include": [
       "src/**/*.ts",
       "package.json"
-, "src/Controllers/UserControllers.ts", "index.ts"    ],
+, "src/Controllers/UserControllers.ts", "src/index.ts"    ],
     "exclude": [
       "node_modules"
     ]
