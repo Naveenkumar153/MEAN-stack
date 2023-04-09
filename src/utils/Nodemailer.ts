@@ -1,6 +1,4 @@
 import * as nodeMailer from 'nodemailer';
-import * as SendGrid   from  'nodemailer-sendgrid-transport';
-import * as sendGridMail from '@sendgrid/mail'
 export class NodeMailer {
 
 
