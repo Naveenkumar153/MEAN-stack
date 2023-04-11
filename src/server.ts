@@ -14,7 +14,7 @@ export class Server {
         this.setConfig();
         this.setRoutes();
         this.handleErrors();
-        this.setFrontend();
+        // this.setFrontend();
     }
     
     setConfig(){
@@ -45,12 +45,12 @@ export class Server {
         this.app.use('/api/user', UserRoutes);
     };
     
-    setFrontend(){
-        this.app.use(express.static('frontend'))
-        this.app.get('*',(req,res) => {
-            res.sendFile(path.join(__dirname,'../frontend/index.html'))
-        })
-    }
+    // setFrontend(){
+    //     this.app.use(express.static('frontend'))
+    //     this.app.get('*',(req,res) => {
+    //         res.sendFile(path.join(__dirname,'../frontend/index.html'))
+    //     })
+    // }
 
     handleErrors(){
         this.app.use((error, req, res, next) => {
