@@ -6,6 +6,5 @@ export declare class Server {
     allowCors(): void;
     configureBodyParser(): void;
     setRoutes(): void;
-    setFrontend(): void;
     handleErrors(): void;
 }

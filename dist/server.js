@@ -43,14 +43,12 @@ const bodyparse = __importStar(require("body-parser"));
 const express = require('express');
 const cors = require('cors');
 const UserRoutes_1 = __importDefault(require("./routes/UserRoutes"));
-const path = require("path");
 class Server {
     constructor() {
         this.app = express();
         this.setConfig();
         this.setRoutes();
         this.handleErrors();
-        this.setFrontend();
     }
     setConfig() {
         this.connectMongoDB();
@@ -77,12 +75,6 @@ class Server {
         this.app.use('/api/user', UserRoutes_1.default);
     }
     ;
-    setFrontend() {
-        this.app.use(express.static('frontend'));
-        this.app.get('*', (req, res) => {
-            res.sendFile(path.join(__dirname, '../frontend/index.html'));
-        });
-    }
     handleErrors() {
         this.app.use((error, req, res, next) => {
             console.log("Middleware Error Hadnling");
